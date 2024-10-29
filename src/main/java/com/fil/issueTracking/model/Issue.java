@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,6 +13,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+
+import com.fil.issueTracking.Enum.ApprovedStatus;
+import com.fil.issueTracking.Enum.IssueStatus;
 
 @Entity
 public class Issue {
@@ -25,7 +31,7 @@ public class Issue {
 	private Employee approvedBy;
 	@ManyToOne
 	@JoinColumn(name = "assignedTo")
-	private Employee assignedTo;////////////////////////////////////////////////////////////////////////////////////////////;;;;;;;;;;;
+	private Employee assignedTo;
 	private String title;
 	private String detail;
 	//dates
@@ -38,12 +44,10 @@ public class Issue {
 	@OneToMany
 	@JoinColumn(name="logIssue")
 	private List<IssueLog> logs;
-	public Issue() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+
 	public Issue(int id, Employee raisedBy, Employee approvedBy, Employee assignedTo, String title, String detail,
-			Date raisedOn, Date approvedOn, Date solevdOn, Date rejectedOn, IssueType issueType, List<IssueLog> logs) {
+			Date raisedOn, Date approvedOn, Date solevdOn, Date rejectedOn, IssueType issueType, List<IssueLog> logs,
+			IssueStatus status, ApprovedStatus approvedStatus, String feedback) {
 		super();
 		this.id = id;
 		this.raisedBy = raisedBy;
@@ -57,7 +61,21 @@ public class Issue {
 		this.rejectedOn = rejectedOn;
 		this.issueType = issueType;
 		this.logs = logs;
+		this.status = status;
+		this.approvedStatus = approvedStatus;
+		this.feedback = feedback;
 	}
+	@Enumerated(EnumType.STRING)
+	private IssueStatus status;
+	@Enumerated(EnumType.STRING)
+	private ApprovedStatus approvedStatus;
+	public String getFeedback() {
+		return feedback;
+	}
+	public void setFeedback(String feedback) {
+		this.feedback = feedback;
+	}
+	private String feedback;
 	public int getId() {
 		return id;
 	}
@@ -130,6 +148,26 @@ public class Issue {
 	public void setLogs(List<IssueLog> logs) {
 		this.logs = logs;
 	}
+	public IssueStatus getStatus() {
+		return status;
+	}
+	public void setStatus(IssueStatus status) {
+		this.status = status;
+	}
+	public ApprovedStatus getApprovedStatus() {
+		return approvedStatus;
+	}
+	public void setApprovedStatus(ApprovedStatus approvedStatus) {
+		this.approvedStatus = approvedStatus;
+	}
+	public Issue() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	
+	
+	
 	
 	
 }

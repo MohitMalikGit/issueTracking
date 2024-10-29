@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 
 
 
+
 @Entity
 public class Employee {
 	
@@ -175,7 +176,10 @@ public class Employee {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	           
+	
+	
+
+	  
 	
 	
 }
