@@ -37,7 +37,7 @@ public class Issue {
 	//dates
 	private Date raisedOn;
 	private Date approvedOn;
-	private Date solevdOn;
+	private Date solvedOn;
 	private Date rejectedOn;
 	@OneToOne
 	private IssueType issueType;
@@ -57,7 +57,7 @@ public class Issue {
 		this.detail = detail;
 		this.raisedOn = raisedOn;
 		this.approvedOn = approvedOn;
-		this.solevdOn = solevdOn;
+		this.solvedOn = solevdOn;
 		this.rejectedOn = rejectedOn;
 		this.issueType = issueType;
 		this.logs = logs;
@@ -125,10 +125,10 @@ public class Issue {
 		this.approvedOn = approvedOn;
 	}
 	public Date getSolevdOn() {
-		return solevdOn;
+		return solvedOn;
 	}
 	public void setSolevdOn(Date solevdOn) {
-		this.solevdOn = solevdOn;
+		this.solvedOn = solevdOn;
 	}
 	public Date getRejectedOn() {
 		return rejectedOn;

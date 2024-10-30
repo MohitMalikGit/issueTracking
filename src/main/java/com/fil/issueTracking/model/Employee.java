@@ -3,6 +3,7 @@ package com.fil.issueTracking.model;
 import java.sql.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,6 +25,7 @@ public class Employee {
 	private String name;
 
 	@OneToOne
+	@JoinColumn(nullable = true)
 	private Employee manager;
 	private String email;
 	private String phone;
@@ -175,6 +177,12 @@ public class Employee {
 	public Employee() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public String toString() {
+		String output = "empName" + name + "empEmail" + email;
+		return output;
 	}
 	
 	
