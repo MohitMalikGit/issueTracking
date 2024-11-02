@@ -14,9 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-
-import com.fil.issueTracking.Enum.ApprovedStatus;
-import com.fil.issueTracking.Enum.IssueStatus;
+import com.fil.issueTracking.enums.ApprovedStatus;
+import com.fil.issueTracking.enums.IssueStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

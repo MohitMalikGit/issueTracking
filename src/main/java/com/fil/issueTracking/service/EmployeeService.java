@@ -2,8 +2,7 @@ package com.fil.issueTracking.service;
 
 import java.util.List;
 
-
-import com.fil.issueTracking.Dto.EmployeeDto;
+import com.fil.issueTracking.payLoad.EmployeeDto;
 
 public interface EmployeeService {
 	EmployeeDto findById(Integer id);

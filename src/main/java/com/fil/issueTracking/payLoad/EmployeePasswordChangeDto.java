@@ -1,4 +1,4 @@
-package com.fil.issueTracking.Dto;
+package com.fil.issueTracking.payLoad;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fil.issueTracking.Dto.EmployeeDto;
-import com.fil.issueTracking.Dto.EmployeePasswordChangeDto;
+import com.fil.issueTracking.payLoad.EmployeeDto;
+import com.fil.issueTracking.payLoad.EmployeePasswordChangeDto;
 import com.fil.issueTracking.service.EmployeeService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

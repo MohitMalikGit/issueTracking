@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.fil.issueTracking.Enum.ApprovalRequirement;
+import com.fil.issueTracking.enums.ApprovalRequirement;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.fil.issueTracking.Enum;
+package com.fil.issueTracking.enums;
 
 public enum ApprovedStatus {
 	ApprovalNotRequired,Approved,NotApproved;

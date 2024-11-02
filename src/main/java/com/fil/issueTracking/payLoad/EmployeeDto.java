@@ -1,4 +1,4 @@
-package com.fil.issueTracking.Dto;
+package com.fil.issueTracking.payLoad;
 
 import java.sql.Date;
 
