@@ -2,6 +2,8 @@ package com.fil.issueTracking.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fil.issueTracking.payLoad.EmployeeDto;
 import com.fil.issueTracking.payLoad.EmployeePasswordChangeDto;
+import com.fil.issueTracking.payLoad.LoginRequest;
+import com.fil.issueTracking.payLoad.LoginResponse;
 import com.fil.issueTracking.service.EmployeeService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +26,21 @@ public class EmployeeController {
 	EmployeeService service;
 	
 	
+	//original
+	@PostMapping("/api/login")
+	public ResponseEntity<LoginResponse> authentication(@Valid @RequestBody LoginRequest loginRequest) {
+		LoginResponse loginResponse = service.userAuthentication(loginRequest);
+		return new ResponseEntity<>(loginResponse , HttpStatus.OK);
+	}
+	
+	
+	
+	
+	
+	
+	//mine
 	@GetMapping("/user")
-	public List<EmployeeDto> FindAllEmployee() {
+	public List<EmployeeDto> findAllEmployee() {
 		return service.findAll();
 	}
 

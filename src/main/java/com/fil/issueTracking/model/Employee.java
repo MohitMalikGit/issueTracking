@@ -3,6 +3,7 @@ package com.fil.issueTracking.model;
 import java.sql.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,8 +31,7 @@ public class Employee {
 	
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private String id;
 	 @NotNull
 	private String name;
 
@@ -39,6 +39,7 @@ public class Employee {
 	@JoinColumn(nullable = true)
 	private Employee manager;
 	@Email
+	@Column(unique = true , nullable = false)
 	private String email;
 	private String phone;
 	private Date dob;
