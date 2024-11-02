@@ -2,10 +2,12 @@ package com.fil.issueTracking.service;
 
 import java.util.List;
 
-import com.fil.issueTracking.model.Employee;
+
+import com.fil.issueTracking.Dto.EmployeeDto;
 
 public interface EmployeeService {
-	Employee findById(Integer id);
-	List<Employee> findAll();
+	EmployeeDto findById(Integer id);
+	List<EmployeeDto> findAll();
+	void changePassword(int id, String password);
 	
 }

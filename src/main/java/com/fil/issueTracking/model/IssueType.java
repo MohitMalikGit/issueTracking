@@ -9,7 +9,16 @@ import javax.persistence.Id;
 
 import com.fil.issueTracking.Enum.ApprovalRequirement;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class IssueType {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,34 +26,6 @@ public class IssueType {
 	private String type;
 	@Enumerated(EnumType.STRING)
 	private ApprovalRequirement  approvalRequirement;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public ApprovalRequirement getRequirement() {
-		return approvalRequirement;
-	}
-	public void setRequirement(ApprovalRequirement requirement) {
-		this.approvalRequirement = requirement;
-	}
-	public IssueType(int id, String type, ApprovalRequirement requirement) {
-		super();
-		this.id = id;
-		this.type = type;
-		this.approvalRequirement = requirement;
-	}
-	public IssueType() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 	
 	
 }
