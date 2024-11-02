@@ -10,5 +10,5 @@ public interface EmployeeService {
 	EmployeeDto findById(String id);
 	List<EmployeeDto> findAll();
 	void changePassword(String id, String password);
-	LoginResponse userAuthentication(LoginRequest loginRequest);
+	EmployeeDto userAuthentication(LoginRequest loginRequest);
 }

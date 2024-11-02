@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeePasswordChangeDto {
-	private int id;
+	private String id;
 	private String newPassword;
 	
 }

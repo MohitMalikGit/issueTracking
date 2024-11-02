@@ -28,9 +28,9 @@ public class EmployeeController {
 	
 	//original
 	@PostMapping("/api/login")
-	public ResponseEntity<LoginResponse> authentication(@Valid @RequestBody LoginRequest loginRequest) {
-		LoginResponse loginResponse = service.userAuthentication(loginRequest);
-		return new ResponseEntity<>(loginResponse , HttpStatus.OK);
+	public ResponseEntity<EmployeeDto> authentication(@Valid @RequestBody LoginRequest loginRequest) {
+		EmployeeDto employeeDto = service.userAuthentication(loginRequest);
+		return new ResponseEntity<>(employeeDto , HttpStatus.OK);
 	}
 	
 	
@@ -45,7 +45,7 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/user/{id}")
-	public ResponseEntity<EmployeeDto> getMethodName(@PathVariable(name="id")Integer id) {
+	public ResponseEntity<EmployeeDto> getMethodName(@PathVariable(name="id")String id) {
 		return  new ResponseEntity<>( service.findById(id) , HttpStatus.OK);
 	}  
  

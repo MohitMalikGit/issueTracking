@@ -32,7 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	//original
 	@Override
-	public LoginResponse userAuthentication(LoginRequest loginRequest) {
+	public EmployeeDto userAuthentication(LoginRequest loginRequest) {
 		String userid = loginRequest.getUserid();
 		String password = loginRequest.getPassword();
 		EmailValidator validator = EmailValidator.getInstance();
@@ -42,14 +42,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 			Employee emp = repo.findByEmail(userid).orElseThrow(()-> new ResourceNotFoundException("User" , "Email" , userid));
 			if(!emp.getPassword().equals(password)) throw new UserNameAndPasswordNotMatchedException();
 			System.out.println(emp.getEmployeeType());
-			return new LoginResponse(emp.getEmployeeType().getType());
+			return modelMapper.map(emp, EmployeeDto.class);
 		}
 		else {
 			Employee emp = repo.findById(userid).orElseThrow(() -> new ResourceNotFoundException("User" , "id" , String.valueOf(userid) ));
 			if(!emp.getPassword().equals(password)) throw new UserNameAndPasswordNotMatchedException();
 			System.out.println(emp.getEmployeeType());
-			return new LoginResponse(emp.getEmployeeType().getType());
-			
+			return modelMapper.map(emp, EmployeeDto.class);
+
 		}
 	}
 
@@ -76,6 +76,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 
-	
+
 
 }
