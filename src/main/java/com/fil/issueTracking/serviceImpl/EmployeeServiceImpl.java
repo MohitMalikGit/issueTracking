@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fil.issueTracking.model.Employee;
+import com.fil.issueTracking.payLoad.CurrentUserResponse;
 import com.fil.issueTracking.payLoad.EmployeeDto;
 import com.fil.issueTracking.payLoad.LoginRequest;
 import com.fil.issueTracking.payLoad.LoginResponse;
@@ -41,25 +42,32 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if( validator.isValid(userid)) {
 			Employee emp = repo.findByEmail(userid).orElseThrow(()-> new ResourceNotFoundException("User" , "Email" , userid));
 			if(!emp.getPassword().equals(password)) throw new UserNameAndPasswordNotMatchedException();
-			System.out.println(emp.getEmployeeType());
+			System.out.println(emp.getRole());
 			return modelMapper.map(emp, EmployeeDto.class);
 		}
 		else {
 			Employee emp = repo.findById(userid).orElseThrow(() -> new ResourceNotFoundException("User" , "id" , String.valueOf(userid) ));
 			if(!emp.getPassword().equals(password)) throw new UserNameAndPasswordNotMatchedException();
-			System.out.println(emp.getEmployeeType());
+			System.out.println(emp.getRole());
 			return modelMapper.map(emp, EmployeeDto.class);
 
 		}
 	}
+	
+	
+	
+	 
 
 
 	@Override  
-	public EmployeeDto findById(String id) {
-		Employee employee = repo.findById(id).orElseThrow(()-> new ResourceNotFoundException("User Not Found" , "userId" , String.valueOf(id)));
-		EmployeeDto employeeDto = modelMapper.map(employee , EmployeeDto.class);
-		return employeeDto; 
+	public CurrentUserResponse findCurrentUser(String id) {
+		Employee emp = repo.findById(id).orElseThrow(()-> new ResourceNotFoundException("User Not Found" , "userId" , String.valueOf(id)));
+		CurrentUserResponse resp = new CurrentUserResponse(emp.getId(), emp.getName(),emp.getRole().getRole(),emp.getEmail(),emp.getDob(),emp.getDoj(),emp.getGender());
+		if(emp.getManager()!=null)resp.setManagerName(emp.getManager().getName());
+		return resp; 
 	}
+	
+	
 	@Override
 	public List<EmployeeDto> findAll() {
 		List<Employee> emplyeeList = repo.findAll();

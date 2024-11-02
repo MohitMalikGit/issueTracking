@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fil.issueTracking.payLoad.CurrentUserResponse;
 import com.fil.issueTracking.payLoad.EmployeeDto;
 import com.fil.issueTracking.payLoad.EmployeePasswordChangeDto;
 import com.fil.issueTracking.payLoad.LoginRequest;
@@ -18,6 +19,7 @@ import com.fil.issueTracking.payLoad.LoginResponse;
 import com.fil.issueTracking.service.EmployeeService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -38,23 +40,26 @@ public class EmployeeController {
 	
 	
 	
-	//mine
-	@GetMapping("/user")
-	public List<EmployeeDto> findAllEmployee() {
-		return service.findAll();
-	}
-
-	@GetMapping("/user/{id}")
-	public ResponseEntity<EmployeeDto> getMethodName(@PathVariable(name="id")String id) {
-		return  new ResponseEntity<>( service.findById(id) , HttpStatus.OK);
+	
+	
+//	//mine
+//	@GetMapping("/user")
+//	public List<EmployeeDto> findAllEmployee() {
+//		return service.findAll();
+//	}
+//
+	@GetMapping("/api/users/me")
+	public ResponseEntity<CurrentUserResponse> currentUser(@RequestParam String id) {
+		System.out.println(id);
+		return  new ResponseEntity<>( service.findCurrentUser(id) , HttpStatus.OK);
 	}  
- 
-
-	@PostMapping("/user/password")
-	public String postMethodName(@RequestBody EmployeePasswordChangeDto empDto) {
-		service.changePassword(empDto.getId(), empDto.getNewPassword());
-		return "password changed successfully";
-	}
+// 
+//
+//	@PostMapping("/user/password")
+//	public String postMethodName(@RequestBody EmployeePasswordChangeDto empDto) {
+//		service.changePassword(empDto.getId(), empDto.getNewPassword());
+//		return "password changed successfully";
+//	}
 	
 	
 

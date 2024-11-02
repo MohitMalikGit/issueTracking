@@ -62,7 +62,8 @@ public class Employee {
 	private List<IssueType> expertise;
 	
 	@OneToOne
-	private EmployeeType employeeType;
+	private Role role;
+	private String gender;
 
 	@Override
 	public String toString() {
