@@ -36,30 +36,30 @@ public class EmployeeController {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-//	//mine
-//	@GetMapping("/user")
-//	public List<EmployeeDto> findAllEmployee() {
-//		return service.findAll();
-//	}
-//
 	@GetMapping("/api/users/me")
 	public ResponseEntity<CurrentUserResponse> currentUser(@RequestParam String id) {
-		System.out.println(id);
 		return  new ResponseEntity<>( service.findCurrentUser(id) , HttpStatus.OK);
 	}  
-// 
-//
-//	@PostMapping("/user/password")
-//	public String postMethodName(@RequestBody EmployeePasswordChangeDto empDto) {
-//		service.changePassword(empDto.getId(), empDto.getNewPassword());
-//		return "password changed successfully";
-//	}
+	
+	
+	
+	
+	
+	
+	//mine
+	@GetMapping("/api/users")
+	public List<EmployeeDto> getAllUsers() {
+		return service.findAll();
+	}
+	
+
+ 
+
+	@PostMapping("/user/password")
+	public String postMethodName(@RequestBody EmployeePasswordChangeDto empDto) {
+		service.changePassword(empDto.getId(), empDto.getNewPassword());
+		return "password changed successfully";
+	}
 	
 	
 

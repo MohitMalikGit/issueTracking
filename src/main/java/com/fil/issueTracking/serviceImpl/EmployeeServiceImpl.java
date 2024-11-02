@@ -42,13 +42,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if( validator.isValid(userid)) {
 			Employee emp = repo.findByEmail(userid).orElseThrow(()-> new ResourceNotFoundException("User" , "Email" , userid));
 			if(!emp.getPassword().equals(password)) throw new UserNameAndPasswordNotMatchedException();
-			System.out.println(emp.getRole());
 			return modelMapper.map(emp, EmployeeDto.class);
 		}
 		else {
 			Employee emp = repo.findById(userid).orElseThrow(() -> new ResourceNotFoundException("User" , "id" , String.valueOf(userid) ));
 			if(!emp.getPassword().equals(password)) throw new UserNameAndPasswordNotMatchedException();
-			System.out.println(emp.getRole());
 			return modelMapper.map(emp, EmployeeDto.class);
 
 		}
@@ -66,6 +64,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if(emp.getManager()!=null)resp.setManagerName(emp.getManager().getName());
 		return resp; 
 	}
+	
 	
 	
 	@Override

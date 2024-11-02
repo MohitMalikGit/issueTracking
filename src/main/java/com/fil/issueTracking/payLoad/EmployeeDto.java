@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fil.issueTracking.model.Role;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +28,8 @@ public class EmployeeDto {
 	private Date dob;
 	@NotEmpty
 	private Date doj;
-	private Integer ManagerId;
+	private String ManagerId;
+	private Role role;
 	
 	
 	
