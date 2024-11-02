@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,11 +32,13 @@ public class Employee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	 @NotNull
 	private String name;
 
 	@OneToOne
 	@JoinColumn(nullable = true)
 	private Employee manager;
+	@Email
 	private String email;
 	private String phone;
 	private Date dob;
