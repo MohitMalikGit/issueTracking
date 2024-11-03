@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.fil.issueTracking.model.Employee;
@@ -73,9 +74,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	
 	@Override
-	public AllUserApiResponse getAllUsers(Integer pageNumber , Integer pageSize) {
-		System.out.println(pageNumber+" "+pageSize);
-		Pageable p = PageRequest.of(pageNumber, pageSize);		
+	public AllUserApiResponse getAllUsers(Integer pageNumber , Integer pageSize,String sortBy,String sortDir) {
+		
+		Sort sort = (sortDir.equalsIgnoreCase("asc"))?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+		Pageable p = PageRequest.of(pageNumber, pageSize ,sort);		
 		Page<Employee> pageUser = repo.findAll(p);
 		List<EmployeeDto> empDtoList = pageUser.getContent().stream().map(emp-> modelMapper.map(emp , EmployeeDto.class)).collect(Collectors.toList());
 		AllUserApiResponse resp = new AllUserApiResponse();

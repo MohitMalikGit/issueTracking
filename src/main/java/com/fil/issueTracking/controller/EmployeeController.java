@@ -43,8 +43,9 @@ public class EmployeeController {
 	}  
 	
 	@GetMapping("/api/users")
-	public AllUserApiResponse getAllUsers(@RequestParam(value="pageNumber" , defaultValue = "0", required=false)Integer pageNumber, @RequestParam(value="pageSize" , defaultValue = "5", required=false)Integer pageSize ) {
-		return service.getAllUsers(pageNumber,pageSize);
+	public AllUserApiResponse getAllUsers(@RequestParam(value="pageNumber" , defaultValue = "0", required=false)Integer pageNumber, @RequestParam(value="pageSize" , defaultValue = "5", required=false)Integer pageSize,
+			@RequestParam(value="sortBy",defaultValue ="id", required=false)String sortBy ,@RequestParam(value="sortDir",defaultValue = "asc",required = false)String sortDir) {
+		return service.getAllUsers(pageNumber,pageSize,sortBy,sortDir);
 	}
 	
 
