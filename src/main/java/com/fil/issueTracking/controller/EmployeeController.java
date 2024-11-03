@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fil.issueTracking.payLoad.AllUserApiResponse;
 import com.fil.issueTracking.payLoad.CurrentUserResponse;
 import com.fil.issueTracking.payLoad.EmployeeDto;
 import com.fil.issueTracking.payLoad.EmployeePasswordChangeDto;
@@ -41,20 +42,14 @@ public class EmployeeController {
 		return  new ResponseEntity<>( service.findCurrentUser(id) , HttpStatus.OK);
 	}  
 	
-	
-	
-	
-	
-	
-	//mine
 	@GetMapping("/api/users")
-	public List<EmployeeDto> getAllUsers() {
-		return service.findAll();
+	public AllUserApiResponse getAllUsers(@RequestParam(value="pageNumber" , defaultValue = "0", required=false)Integer pageNumber, @RequestParam(value="pageSize" , defaultValue = "5", required=false)Integer pageSize ) {
+		return service.getAllUsers(pageNumber,pageSize);
 	}
 	
 
  
-
+	//mine
 	@PostMapping("/user/password")
 	public String postMethodName(@RequestBody EmployeePasswordChangeDto empDto) {
 		service.changePassword(empDto.getId(), empDto.getNewPassword());
