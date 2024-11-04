@@ -1,6 +1,6 @@
 package com.fil.issueTracking.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -19,7 +19,7 @@ import com.fil.issueTracking.enums.IssueStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.NoArgsConstructor; 
 import lombok.Setter;
 
 @Entity
@@ -41,12 +41,10 @@ public class Issue {
 	@JoinColumn(name = "assignedTo")
 	private Employee assignedTo;
 	private String title;
-	private String detail;
-	//dates
-	private Date raisedOn;
-	private Date approvedOn;
-	private Date solvedOn;
-	private Date rejectedOn;
+	private String description; 
+	//dates 
+	private Timestamp createdAt;
+	private Timestamp updatedAt;
 	@OneToOne
 	private IssueType issueType;
 	@OneToMany
@@ -56,6 +54,8 @@ public class Issue {
 	private IssueStatus status;
 	@Enumerated(EnumType.STRING)
 	private ApprovedStatus approvedStatus;
+	String feedback;
+	
 	
 
 	

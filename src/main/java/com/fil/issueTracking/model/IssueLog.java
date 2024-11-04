@@ -1,6 +1,6 @@
 package com.fil.issueTracking.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,11 +23,11 @@ public class IssueLog {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private int des;
-	private Date date;
+	private int description;
+	private Timestamp loggedAt;
 	@ManyToOne
 	@JoinColumn(name="logIssue")
-	private Issue logIssue;
+	private Issue issue;
 	
 	
 }

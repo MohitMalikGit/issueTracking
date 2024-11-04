@@ -1,5 +1,5 @@
 package com.fil.issueTracking.enums;
 
 public enum IssueStatus {
-	Open,Pending,Closed,Rejected,Resolved;
+	not_accepted,in_progess,accepted,resolved,rejected;
 }

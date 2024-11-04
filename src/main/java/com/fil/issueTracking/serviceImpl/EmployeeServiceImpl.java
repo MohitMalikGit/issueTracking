@@ -1,9 +1,7 @@
 package com.fil.issueTracking.serviceImpl;
 
 import java.util.List;
-import java.util.Optional;
 
-import com.fil.issueTracking.exception.ArgumentTypeNotMatchedException;
 import com.fil.issueTracking.exception.ResourceNotFoundException;
 import com.fil.issueTracking.exception.UserNameAndPasswordNotMatchedException;
 
@@ -12,7 +10,6 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.apache.commons.validator.EmailValidator;
-import org.hibernate.internal.build.AllowSysOut;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +23,6 @@ import com.fil.issueTracking.payLoad.AllUserApiResponse;
 import com.fil.issueTracking.payLoad.CurrentUserResponse;
 import com.fil.issueTracking.payLoad.EmployeeDto;
 import com.fil.issueTracking.payLoad.LoginRequest;
-import com.fil.issueTracking.payLoad.LoginResponse;
 import com.fil.issueTracking.repo.EmployeeRepo;
 import com.fil.issueTracking.service.EmployeeService;
 @Service
@@ -66,7 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override  
 	public CurrentUserResponse findCurrentUser(String id) {
 		Employee emp = repo.findById(id).orElseThrow(()-> new ResourceNotFoundException("User Not Found" , "userId" , String.valueOf(id)));
-		CurrentUserResponse resp = new CurrentUserResponse(emp.getId(), emp.getName(),emp.getRole().getRole(),emp.getEmail(),emp.getDob(),emp.getDoj(),emp.getGender());
+		CurrentUserResponse resp = new CurrentUserResponse(emp.getId(), emp.getName(),emp.getRole(),emp.getEmail(),emp.getDob(),emp.getDoj(),emp.getGender());
 		if(emp.getManager()!=null)resp.setManagerName(emp.getManager().getName());
 		return resp; 
 	}

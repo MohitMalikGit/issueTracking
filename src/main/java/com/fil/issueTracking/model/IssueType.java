@@ -1,14 +1,10 @@
 package com.fil.issueTracking.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import com.fil.issueTracking.enums.ApprovalRequirement;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,9 +19,9 @@ public class IssueType {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String type;
-	@Enumerated(EnumType.STRING)
-	private ApprovalRequirement  approvalRequirement;
+	private String type; 
+	@Column(nullable = false)
+	private boolean auto_accept; // change to private boolean auto_accept
 	
 	
 }

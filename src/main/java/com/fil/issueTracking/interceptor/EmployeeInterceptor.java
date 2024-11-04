@@ -12,8 +12,7 @@ public class EmployeeInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
-		
+			throws Exception {		
 		System.out.println("passed through interceptor");
 		return true;
 	}

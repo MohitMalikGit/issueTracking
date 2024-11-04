@@ -3,19 +3,17 @@ package com.fil.issueTracking.payLoad;
 
 import java.sql.Date;
 
-import javax.validation.constraints.NotEmpty;
 
-import com.fil.issueTracking.model.Role;
+import com.fil.issueTracking.enums.Gender;
+import com.fil.issueTracking.enums.Role;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 @Getter
 @Setter
 public class CurrentUserResponse {
 	
-	public CurrentUserResponse(String empId, String name, String role, String email, Date dob, Date doj, String gender) {
+	public CurrentUserResponse(String empId, String name, Role role, String email, Date dob, Date doj, Gender gender) {
 		super();
 		this.empId = empId;
 		this.name = name;
@@ -30,11 +28,11 @@ public class CurrentUserResponse {
 
 	private String empId;
 	private String name;
-	private String role;
+	private Role role;
 	private String email;
 	private Date dob;
 	private Date doj;
-	private String gender;
+	private Gender gender;
 	private String managerName;
 	
 	

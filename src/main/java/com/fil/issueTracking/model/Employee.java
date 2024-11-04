@@ -1,18 +1,22 @@
 package com.fil.issueTracking.model;
 
+import java.lang.annotation.ElementType;
 import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+
+import com.fil.issueTracking.enums.Gender;
+import com.fil.issueTracking.enums.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -61,9 +65,10 @@ public class Employee {
 	@OneToMany
 	private List<IssueType> expertise;
 	
-	@OneToOne
+	@Enumerated(EnumType.STRING)
 	private Role role;
-	private String gender;
+	@Enumerated(EnumType.STRING)
+	private Gender gender;
 
 	@Override
 	public String toString() {

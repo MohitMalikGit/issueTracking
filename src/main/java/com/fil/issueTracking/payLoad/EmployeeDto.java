@@ -4,11 +4,9 @@ import java.sql.Date;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
-import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fil.issueTracking.model.Role;
+import com.fil.issueTracking.enums.Role;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
