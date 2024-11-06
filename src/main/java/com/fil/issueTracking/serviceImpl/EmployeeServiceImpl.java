@@ -1,7 +1,9 @@
 package com.fil.issueTracking.serviceImpl;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.fil.issueTracking.enums.Role;
 import com.fil.issueTracking.exception.ResourceNotFoundException;
 import com.fil.issueTracking.exception.UserNameAndPasswordNotMatchedException;
 
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import com.fil.issueTracking.model.Employee;
 import com.fil.issueTracking.payLoad.AllUserApiResponse;
+import com.fil.issueTracking.payLoad.AssigneeResponseDto;
 import com.fil.issueTracking.payLoad.CurrentUserResponse;
 import com.fil.issueTracking.payLoad.EmployeeDto;
 import com.fil.issueTracking.payLoad.LoginRequest;
@@ -94,6 +97,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 		emp.setPassword(password);
 		repo.save(emp);
 	}
+
+
+
+
+
+
+	@Override
+	public List<AssigneeResponseDto> getAllAssignee() {
+		List<Employee> allByRole = repo.findAllByRole(Role.support);
+		List<AssigneeResponseDto> collect = allByRole.stream().map(emp-> new AssigneeResponseDto(emp.getId() , emp.getName())).collect(Collectors.toList());
+		return collect;
+	}
+
+
+
+
 
 
 

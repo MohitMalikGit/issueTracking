@@ -1,10 +1,14 @@
 package com.fil.issueTracking.controller;
 
 
+import java.util.List;
+import java.util.Optional;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,12 +16,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fil.issueTracking.config.AppConstants;
+import com.fil.issueTracking.exception.UserNameAndPasswordNotMatchedException;
 import com.fil.issueTracking.model.Employee;
 import com.fil.issueTracking.payLoad.AllUserApiResponse;
+import com.fil.issueTracking.payLoad.AssigneeResponseDto;
 import com.fil.issueTracking.payLoad.CurrentUserResponse;
 import com.fil.issueTracking.payLoad.EmployeeDto;
 import com.fil.issueTracking.payLoad.EmployeePasswordChangeDto;
 import com.fil.issueTracking.payLoad.LoginRequest;
+import com.fil.issueTracking.repo.EmployeeRepo;
 import com.fil.issueTracking.service.EmployeeService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +35,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class EmployeeController {
 	@Autowired 
 	EmployeeService service;
-	
+	@Autowired
+	EmployeeRepo employeeRepo;
 	
 	@GetMapping("/api/users/me")
 	public ResponseEntity<CurrentUserResponse> currentUser(@RequestParam String id) {
@@ -54,6 +62,17 @@ public class EmployeeController {
 	public String postMethodName(@RequestBody EmployeePasswordChangeDto empDto) {
 		service.changePassword(empDto.getId(), empDto.getNewPassword());
 		return "password changed successfully";
+	}
+	
+	@GetMapping("/api/assignees")
+	public ResponseEntity<List<AssigneeResponseDto>> getAllAssignees() {
+		 UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		 Optional<Employee> byId = employeeRepo.findById(principal.getUsername());
+		 Employee emp = byId.get();
+		 if( !emp.getRole().name().equals("manager")) throw new UserNameAndPasswordNotMatchedException();
+		 List<AssigneeResponseDto> allAssignee = service.getAllAssignee();
+		 
+		return ResponseEntity.ok(allAssignee);
 	}
 	
 	
