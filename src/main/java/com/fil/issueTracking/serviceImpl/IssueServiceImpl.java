@@ -1,14 +1,23 @@
 package com.fil.issueTracking.serviceImpl;
 
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fil.issueTracking.exception.ResourceNotFoundException;
+import com.fil.issueTracking.model.Employee;
 import com.fil.issueTracking.model.Issue;
 import com.fil.issueTracking.model.IssueType;
 import com.fil.issueTracking.payLoad.GetSingleIssueApiResponse;
@@ -34,6 +43,7 @@ public class IssueServiceImpl implements IssueService {
 	@Autowired
 	EmployeeRepo employeeRepo;
 	
+	
 	@Override
 	public GetSingleIssueApiResponse getSingleIssue(Integer id) {
 		Issue issue = issueRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Issue" , "IssueId", String.valueOf(id)));
@@ -52,22 +62,32 @@ public class IssueServiceImpl implements IssueService {
 		raisedBy.put("name", issue.getRaisedBy().getName());
 		raisedBy.put("id", issue.getRaisedBy().getId());
 		resp.setRaisedBy(raisedBy);
-		resp.setCreated(issue.getCreatedAt());
-		resp.setUpdated(issue.getUpdatedAt());
+		resp.setCreated(issue.getCreatedAt().toLocalDateTime().toLocalDate());
+		resp.setUpdated(issue.getUpdatedAt().toLocalDateTime().toLocalDate());
 		resp.setRemark(issue.getFeedback());
 		return resp;
 	}
 
 	@Override
-	public createIssueApiResponse createIssue(createIssueApiRequest req) {
-//		
+	public createIssueApiResponse createIssue(createIssueApiRequest req , String id) {
+		Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+		Optional<Employee> byId = employeeRepo.findById(id);
+		Employee emp = byId.get();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currentTime = sdf.format(currentTimestamp);
+        currentTimestamp = Timestamp.valueOf(currentTime);		
 		Issue issue = new Issue();
 		issue.setIssueType(issueTypeRepo.findByType(req.getIssueType()).orElseThrow(() -> new ResourceNotFoundException("IssueType" , "IssueName" , req.getIssueType())));
 		issue.setTitle(req.getTitle());
 		issue.setDescription(req.getDescription());
-//		issue.setRaisedBy();
-		
-		return null;
+		issue.setRaisedBy(emp);
+		issue.setCreatedAt(currentTimestamp);
+		issue.setUpdatedAt(currentTimestamp);
+		issueRepo.save(issue);   		
+		createIssueApiResponse resp = new createIssueApiResponse();
+		resp.setIssueId(issue.getId());
+		resp.setIssueDescription(issue.getDescription());
+		return resp;
 	}
 	
 	

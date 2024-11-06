@@ -6,10 +6,13 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fil.issueTracking.config.AppConstants;
+import com.fil.issueTracking.model.Employee;
 import com.fil.issueTracking.payLoad.AllUserApiResponse;
 import com.fil.issueTracking.payLoad.CurrentUserResponse;
 import com.fil.issueTracking.payLoad.EmployeeDto;
@@ -29,7 +32,13 @@ public class EmployeeController {
 	
 	@GetMapping("/api/users/me")
 	public ResponseEntity<CurrentUserResponse> currentUser(@RequestParam String id) {
+		
+		 UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		 System.out.println(principal);
+		
 		return  new ResponseEntity<>( service.findCurrentUser(id) , HttpStatus.OK);
+		
+		
 	}  
 	
 	@GetMapping("/api/users")

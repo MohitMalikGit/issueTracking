@@ -36,7 +36,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Employee implements UserDetails {
+public class Employee{
 	
 	
 	@Id
@@ -75,48 +75,5 @@ public class Employee implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
 
-	@Override
-	public String toString() {
-		String output = "empName" + name + "empEmail" + email;
-		return output;
-	}
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<SimpleGrantedAuthority> authorites = new ArrayList<>();
-		authorites.add(new SimpleGrantedAuthority(this.role.name()));
-		return authorites;
-	}
-
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return this.id;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	
 }

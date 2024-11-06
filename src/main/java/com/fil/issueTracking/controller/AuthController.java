@@ -1,5 +1,7 @@
 package com.fil.issueTracking.controller;
 
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,11 +49,12 @@ public class AuthController {
 		this.authenticate(request.getUsername(), request.getPassword());
 		UserDetails userDetails = this.userDetailsService.loadUserByUsername(request.getUsername());
 		String token = this.jwtTokenHelper.generateToken(userDetails);
-
+		Optional<Employee> empOpt = employeeRepo.findById(userDetails.getUsername());
+		Employee emp = empOpt.get();
 		JwtAuthResponse response = new JwtAuthResponse();
 		response.setToken(token);
-		response.setRole(((Employee)userDetails).getRole().name());
-		response.setManagerId(((Employee)userDetails).getManager()==null?"null":((Employee)userDetails).getManager().getId());
+		response.setRole(emp.getRole().name());
+		response.setManagerId(emp.getManager()==null?"null":(emp.getManager().getId()));
 		return new ResponseEntity<JwtAuthResponse>(response, HttpStatus.OK);
 	}
 

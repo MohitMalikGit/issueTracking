@@ -21,7 +21,7 @@ public class IssueType {
 	private int id;
 	private String type; 
 	@Column(nullable = false)
-	private boolean auto_accept; // change to private boolean auto_accept
+	private String auto_accept; // change to private boolean auto_accept
 	
 	
 }
