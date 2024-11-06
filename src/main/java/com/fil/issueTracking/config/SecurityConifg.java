@@ -38,7 +38,7 @@ public class SecurityConifg extends WebSecurityConfigurerAdapter {
 				csrf()
 				.disable()
 				.authorizeHttpRequests()
-				.antMatchers("/login").permitAll()
+				.antMatchers("/api/login").permitAll()
 				.anyRequest()
 				.authenticated()
 				.and().exceptionHandling()

@@ -3,6 +3,7 @@ package com.fil.issueTracking.model;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -35,10 +36,10 @@ public class Issue {
 	@JoinColumn(name="raisedBy")
 	private Employee raisedBy;
 	@ManyToOne
-	@JoinColumn(name="approvedBy")
+	@JoinColumn(name="approvedBy", nullable = true)
 	private Employee approvedBy;
 	@ManyToOne
-	@JoinColumn(name = "assignedTo")
+	@JoinColumn(name = "assignedTo" , nullable = true)
 	private Employee assignedTo;
 	private String title;
 	private String description; 
@@ -54,6 +55,7 @@ public class Issue {
 	private IssueStatus status;
 	@Enumerated(EnumType.STRING)
 	private ApprovedStatus approvedStatus;
+	@Column(nullable = true)
 	String feedback;
 	
 	

@@ -42,15 +42,16 @@ public class AuthController {
 	@Autowired
 	private ModelMapper mapper;
 	
-	@PostMapping("/login")
+	@PostMapping("/api/login")
 	public ResponseEntity<JwtAuthResponse> createToken(@RequestBody JwtAuthRequest request) throws Exception {
 		this.authenticate(request.getUsername(), request.getPassword());
 		UserDetails userDetails = this.userDetailsService.loadUserByUsername(request.getUsername());
 		String token = this.jwtTokenHelper.generateToken(userDetails);
 
 		JwtAuthResponse response = new JwtAuthResponse();
-		response. setToken(token);
+		response.setToken(token);
 		response.setRole(((Employee)userDetails).getRole().name());
+		response.setManagerId(((Employee)userDetails).getManager()==null?"null":((Employee)userDetails).getManager().getId());
 		return new ResponseEntity<JwtAuthResponse>(response, HttpStatus.OK);
 	}
 

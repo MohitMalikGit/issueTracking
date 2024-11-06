@@ -27,14 +27,6 @@ public class EmployeeController {
 	EmployeeService service;
 	
 	
-	//original
-	@PostMapping("/api/login")
-	public ResponseEntity<EmployeeDto> authentication(@Valid @RequestBody LoginRequest loginRequest) {
-		EmployeeDto employeeDto = service.userAuthentication(loginRequest);
-		return new ResponseEntity<>(employeeDto , HttpStatus.OK);
-	}
-	
-	
 	@GetMapping("/api/users/me")
 	public ResponseEntity<CurrentUserResponse> currentUser(@RequestParam String id) {
 		return  new ResponseEntity<>( service.findCurrentUser(id) , HttpStatus.OK);
