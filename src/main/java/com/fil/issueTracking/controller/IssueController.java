@@ -8,6 +8,10 @@ import com.fil.issueTracking.payLoad.createIssueApiRequest;
 import com.fil.issueTracking.payLoad.createIssueApiResponse;
 import com.fil.issueTracking.service.IssueService;
 
+import java.util.List;
+
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,21 +29,40 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class IssueController {
 	@Autowired
 	IssueService service;
-	@GetMapping("/api/issues")
-	public ResponseEntity<GetSingleIssueApiResponse>getSingleIssue(@RequestParam Integer issueId) {
+	@GetMapping("/api/issues/{issueId}")
+	public ResponseEntity<GetSingleIssueApiResponse>getSingleIssue(@PathParam(value = "issueId") Integer issueId) {
 		GetSingleIssueApiResponse singleIssue = service.getSingleIssue(issueId);
 		return new ResponseEntity<>(singleIssue , HttpStatus.ACCEPTED);
-		
+
 	}
 	
+	@GetMapping("/api/issues")
+	public ResponseEntity<List<GetSingleIssueApiResponse>>getAllIssue(@RequestParam(value="page")Integer pageNumber,@RequestParam(value="limit")Integer pageSize,
+			@RequestParam(value="category")String issueType,@RequestParam(value="status") String issueStatus,@RequestParam(value="assignee") String assigneeId
+			,@RequestParam String sortBy , @RequestParam String sortOrder) {
+		
+		List<GetSingleIssueApiResponse> allTheIssue = service.getAllTheIssue(pageNumber, pageSize, issueType, issueStatus, assigneeId, sortBy,sortOrder);
+		
+		return ResponseEntity.ok(allTheIssue);
+	}
+
 	@PostMapping("/api/issues")
 	public HttpStatus createIssue(@RequestBody createIssueApiRequest req) {
 
-		 User details = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		 System.out.println(details);
-		 service.createIssue(req, details.getUsername());
-		 return HttpStatus.ACCEPTED;
+		User details = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		System.out.println(details);
+		service.createIssue(req, details.getUsername());
+		return HttpStatus.ACCEPTED;
 	}
-	
-	
+
+
+
+
 }
+
+
+
+
+
+
+
