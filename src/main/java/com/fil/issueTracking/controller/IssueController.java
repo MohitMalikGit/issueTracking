@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fil.issueTracking.model.Employee;
 import com.fil.issueTracking.payLoad.GetSingleIssueApiResponse;
+import com.fil.issueTracking.payLoad.PendingIssueApprovalResponse;
 import com.fil.issueTracking.payLoad.UpdateIssueApprovalStatusRequest;
 import com.fil.issueTracking.payLoad.createIssueApiRequest;
 import com.fil.issueTracking.payLoad.createIssueApiResponse;
@@ -63,6 +64,15 @@ public class IssueController {
 		service.updateIssueApprovalStatus(request, issueId);
 		return HttpStatus.ACCEPTED;
 	}
+	
+	
+	@GetMapping("/api/approvalIssues")
+	public ResponseEntity<PendingIssueApprovalResponse> getMethodName(@RequestParam String category,@RequestParam String employee , @RequestParam String sortBy,
+			@RequestParam String order ,@RequestParam String page,@RequestParam String limit) {
+		
+		return null;
+	}
+	
 	
 	
 	
