@@ -209,6 +209,7 @@ public class IssueServiceImpl implements IssueService {
 				}
 			}
 		}
+		
 		issue.setFeedback(request.getComment());
 		
 	}
