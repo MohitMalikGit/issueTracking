@@ -11,6 +11,7 @@ import com.fil.issueTracking.service.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,12 +33,12 @@ public class IssueController {
 	}
 	
 	@PostMapping("/api/issues")
-	public ResponseEntity<createIssueApiResponse>  createIssue(@RequestBody createIssueApiRequest req) {
+	public HttpStatus createIssue(@RequestBody createIssueApiRequest req) {
 
 		 User details = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		 System.out.println(details);
-		 createIssueApiResponse resp = service.createIssue(req, details.getUsername());
-		 return new ResponseEntity<>(resp , HttpStatus.ACCEPTED);
+		 service.createIssue(req, details.getUsername());
+		 return HttpStatus.ACCEPTED;
 	}
 	
 	

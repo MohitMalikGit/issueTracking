@@ -14,8 +14,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.fil.issueTracking.enums.ApprovedStatus;
+import com.fil.issueTracking.enums.IssueStatus;
 import com.fil.issueTracking.exception.ResourceNotFoundException;
 import com.fil.issueTracking.model.Employee;
 import com.fil.issueTracking.model.Issue;
@@ -31,7 +34,7 @@ import com.fil.issueTracking.service.IssueService;
 
 @Service
 public class IssueServiceImpl implements IssueService {
-	
+
 	@Autowired
 	IssueRepo issueRepo;
 	@Autowired
@@ -42,10 +45,13 @@ public class IssueServiceImpl implements IssueService {
 	JwtTokenHelper jwtTokenhelper;
 	@Autowired
 	EmployeeRepo employeeRepo;
-	
-	
+
+
 	@Override
 	public GetSingleIssueApiResponse getSingleIssue(Integer id) {
+		UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Optional<Employee> byId = employeeRepo.findById(principal.getUsername());
+		Employee emp = byId.get();
 		Issue issue = issueRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Issue" , "IssueId", String.valueOf(id)));
 		GetSingleIssueApiResponse resp = new GetSingleIssueApiResponse();
 		resp.setIssueId(issue.getId());
@@ -55,7 +61,9 @@ public class IssueServiceImpl implements IssueService {
 		Map<String,String> assignee = new HashMap<>();
 		if(issue.getAssignedTo()!=null) {
 			assignee.put("name", issue.getAssignedTo().getName());
-			assignee.put("id", issue.getAssignedTo().getId());
+			if(emp.getRole().name().equals("manager")) {
+				assignee.put("id", issue.getAssignedTo().getId());
+			}
 		}
 		resp.setAssignee(assignee);
 		Map<String,String> raisedBy = new HashMap<>();
@@ -69,13 +77,14 @@ public class IssueServiceImpl implements IssueService {
 	}
 
 	@Override
-	public createIssueApiResponse createIssue(createIssueApiRequest req , String id) {
+	public void createIssue(createIssueApiRequest req , String id) {
+		//implemeting only for issueType where auto_accept is false
 		Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
 		Optional<Employee> byId = employeeRepo.findById(id);
 		Employee emp = byId.get();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String currentTime = sdf.format(currentTimestamp);
-        currentTimestamp = Timestamp.valueOf(currentTime);		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String currentTime = sdf.format(currentTimestamp);
+		currentTimestamp = Timestamp.valueOf(currentTime);		
 		Issue issue = new Issue();
 		issue.setIssueType(issueTypeRepo.findByType(req.getIssueType()).orElseThrow(() -> new ResourceNotFoundException("IssueType" , "IssueName" , req.getIssueType())));
 		issue.setTitle(req.getTitle());
@@ -83,18 +92,19 @@ public class IssueServiceImpl implements IssueService {
 		issue.setRaisedBy(emp);
 		issue.setCreatedAt(currentTimestamp);
 		issue.setUpdatedAt(currentTimestamp);
+		issue.setStatus(IssueStatus.in_progess);
+		issue.setApprovedStatus(ApprovedStatus.NotApproved);
 		issueRepo.save(issue);   		
 		createIssueApiResponse resp = new createIssueApiResponse();
 		resp.setIssueId(issue.getId());
 		resp.setIssueDescription(issue.getDescription());
-		return resp;
 	}
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 
 }
