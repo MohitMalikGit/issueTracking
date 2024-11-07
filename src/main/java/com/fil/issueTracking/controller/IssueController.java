@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fil.issueTracking.model.Employee;
 import com.fil.issueTracking.payLoad.GetSingleIssueApiResponse;
+import com.fil.issueTracking.payLoad.UpdateIssueApprovalStatusRequest;
 import com.fil.issueTracking.payLoad.createIssueApiRequest;
 import com.fil.issueTracking.payLoad.createIssueApiResponse;
 import com.fil.issueTracking.service.IssueService;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
+@CrossOrigin(origins = "*")
 public class IssueController {
 	@Autowired
 	IssueService service;
@@ -50,10 +53,20 @@ public class IssueController {
 	public HttpStatus createIssue(@RequestBody createIssueApiRequest req) {
 
 		User details = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		System.out.println(details);
+		System.out.println(req.getIssueType());
 		service.createIssue(req, details.getUsername());
 		return HttpStatus.ACCEPTED;
 	}
+	
+	@PostMapping("/api/approvalIssue/{issueId}")
+	public HttpStatus updateIssue( @PathParam(value="issueId")Integer issueId ,@RequestBody UpdateIssueApprovalStatusRequest request) {
+		service.updateIssueApprovalStatus(request, issueId);
+		return HttpStatus.ACCEPTED;
+	}
+	
+	
+	
+	
 
 
 

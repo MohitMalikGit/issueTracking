@@ -12,6 +12,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
+@CrossOrigin(origins = "*")
 public class EmployeeController {
 	@Autowired 
 	EmployeeService service;
@@ -51,14 +53,14 @@ public class EmployeeController {
 
 	@GetMapping("/api/users")
 	public AllUserApiResponse getAllUsers(@RequestParam(value="role")String role,@RequestParam(value="page" , defaultValue = AppConstants.page_number, required=false)Integer pageNumber, @RequestParam(value="limit" ,defaultValue = AppConstants.page_size , required=false)Integer pageSize,
-			@RequestParam(value="sortBy",defaultValue = AppConstants.sort_by, required=false)String sortBy ,@RequestParam(value="order",defaultValue = AppConstants.sort_dir,required = false)String sortDir) {
+			@RequestParam(value="sortBy",defaultValue = AppConstants.sort_by, required=false)String sortBy ,@RequestParam(value="order",defaultValue = AppConstants.sort_dir,required = false)String sortDir , @RequestParam(value="gender") String gender) {
 		
 		UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Optional<Employee> byId = employeeRepo.findById(principal.getUsername());
 		Employee emp = byId.get();
 		if( !emp.getRole().name().equals("manager")) throw new UserNameAndPasswordNotMatchedException();
 		
-		return service.getAllUsers(role,pageNumber,pageSize,sortBy,sortDir);
+		return service.getAllUsers(role,pageNumber,pageSize,sortBy,sortDir,gender);
 	}
 
 

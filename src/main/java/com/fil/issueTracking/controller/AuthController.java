@@ -11,6 +11,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,7 @@ import com.fil.issueTracking.security.JwtTokenHelper;
 import com.fil.issueTracking.service.EmployeeService;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class AuthController {
 	
 
@@ -55,6 +57,8 @@ public class AuthController {
 		response.setToken(token);
 		response.setRole(emp.getRole().name());
 		response.setManagerId(emp.getManager()==null?"null":(emp.getManager().getId()));
+		response.setUsername(emp.getName());
+		response.setEmpId(emp.getId());
 		return new ResponseEntity<JwtAuthResponse>(response, HttpStatus.OK);
 	}
 

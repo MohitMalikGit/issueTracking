@@ -11,6 +11,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
@@ -37,11 +39,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Employee{
-	
-	
+
+
 	@Id
 	private String id;
-	 @NotNull
+	@NotNull
 	private String name;
 
 	@OneToOne
@@ -57,19 +59,19 @@ public class Employee{
 	@OneToMany  
 	@JoinColumn(name="raisedBy")
 	private List<Issue> issueRaised;
-	
+
 	@OneToMany
 	@JoinColumn(name="approvedBy")
 	private List<Issue> approvals;
-	
-	
+
+
 	@OneToMany
 	@JoinColumn(name="assignedTo")
 	private List<Issue> assignedIssue;
-	
+
 	@OneToMany
 	private List<IssueType> expertise;
-	
+
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	@Enumerated(EnumType.STRING)

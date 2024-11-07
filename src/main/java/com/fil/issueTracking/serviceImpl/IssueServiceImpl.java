@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,11 +27,13 @@ import org.springframework.stereotype.Service;
 
 import com.fil.issueTracking.enums.ApprovedStatus;
 import com.fil.issueTracking.enums.IssueStatus;
+import com.fil.issueTracking.enums.Role;
 import com.fil.issueTracking.exception.ResourceNotFoundException;
 import com.fil.issueTracking.model.Employee;
 import com.fil.issueTracking.model.Issue;
 import com.fil.issueTracking.model.IssueType;
 import com.fil.issueTracking.payLoad.GetSingleIssueApiResponse;
+import com.fil.issueTracking.payLoad.UpdateIssueApprovalStatusRequest;
 import com.fil.issueTracking.payLoad.createIssueApiRequest;
 import com.fil.issueTracking.payLoad.createIssueApiResponse;
 import com.fil.issueTracking.repo.EmployeeRepo;
@@ -55,11 +59,14 @@ public class IssueServiceImpl implements IssueService {
 
 
 	@Override
+	@Transactional
 	public void createIssue(createIssueApiRequest req , String id) {
 		//implemeting only for issueType where auto_accept is false
 		Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
 		Optional<Employee> byId = employeeRepo.findById(id);
 		Employee emp = byId.get();
+		Optional<IssueType> byType = issueTypeRepo.findByType(req.getIssueType());
+		IssueType issueType = byType.get();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String currentTime = sdf.format(currentTimestamp);
 		currentTimestamp = Timestamp.valueOf(currentTime);		
@@ -70,12 +77,27 @@ public class IssueServiceImpl implements IssueService {
 		issue.setRaisedBy(emp);
 		issue.setCreatedAt(currentTimestamp);
 		issue.setUpdatedAt(currentTimestamp);
-		issue.setStatus(IssueStatus.in_progess);
-		issue.setApprovedStatus(ApprovedStatus.NotApproved);
+		System.out.println(req.getIssueType());
+		if( !issueType.getAuto_accept().equals("true"))
+		issue.setStatus(IssueStatus.not_accepted);
+		else {
+			List<Employee> allByRole = employeeRepo.findAllByRole(Role.support);
+			for( Employee e : allByRole) {
+				for( IssueType it : e.getExpertise()) {
+					if( it.getType().equals(req.getIssueType())) {
+						issue.setStatus(IssueStatus.in_progress);
+						issue.setAssignedTo(e);
+						e.getAssignedIssue().add(issue);
+					}
+				}
+			}
+		}
 		issueRepo.save(issue);   		
 		createIssueApiResponse resp = new createIssueApiResponse();
 		resp.setIssueId(issue.getId());
 		resp.setIssueDescription(issue.getDescription());
+		
+		
 	}
 
 	
@@ -108,7 +130,7 @@ public class IssueServiceImpl implements IssueService {
 		resp.setUpdated(issue.getUpdatedAt().toLocalDateTime().toLocalDate());
 		resp.setRemark(issue.getFeedback());
 		resp.setStatus((issue.getStatus()==null)?"null":(issue.getStatus().name()));
-
+		resp.setRemark(issue.getFeedback());
 		return resp;
 	}
 	
@@ -124,13 +146,13 @@ public class IssueServiceImpl implements IssueService {
 		Pageable p = PageRequest.of(pageNumber, pageSize ,sort);	
 		Page<Issue> all = issueRepo.findAll(p);
 		List<Issue> content = all.getContent();
-		if(!issueType.equals("All")){
+		if(!issueType.equals("all")){
 			content = content.stream().filter(i->i.getIssueType().getType().equals(issueType)).toList();
 		}
-		if(!issueStatus.equals("All")) {
+		if(!issueStatus.equals("all")) {
 			content = content.stream().filter(i-> i.getStatus().name().equals(issueStatus)).toList();
 		}
-		if(!assigneeId.equals("All")) {
+		if(!assigneeId.equals("all")) {
 			content = content.stream().filter(i -> i.getAssignedTo().getId().equals(assigneeId)).toList();
 		}
 		
@@ -157,11 +179,38 @@ public class IssueServiceImpl implements IssueService {
 			resp.setUpdated(issue.getUpdatedAt().toLocalDateTime().toLocalDate());
 			resp.setRemark(issue.getFeedback());
 			resp.setStatus((issue.getStatus()==null)?"null":(issue.getStatus().name()));
+			resp.setRemark(issue.getFeedback());
 			response.add(resp);
 		}
 		
 		
 		return response;
+	}
+
+
+
+
+	@Override
+	@Transactional
+	public void updateIssueApprovalStatus(UpdateIssueApprovalStatusRequest request,Integer issueId) {
+		Optional<Issue> byId = issueRepo.findById(issueId);
+		Issue issue = byId.get();
+		issue.setStatus(IssueStatus.valueOf(request.getStatus()));
+		issue.setApprovedBy(issue.getRaisedBy().getManager());
+		if(request.getStatus().equals("in_progress")) {
+			List<Employee> allByRole = employeeRepo.findAllByRole(Role.support);
+			for( Employee e : allByRole) {
+				for( IssueType it : e.getExpertise()) {
+					if( it.getType().equals(issue.getIssueType().getType())) {
+						issue.setStatus(IssueStatus.in_progress);
+						issue.setAssignedTo(e);
+						e.getAssignedIssue().add(issue);
+					}
+				}
+			}
+		}
+		issue.setFeedback(request.getComment());
+		
 	}
 
 

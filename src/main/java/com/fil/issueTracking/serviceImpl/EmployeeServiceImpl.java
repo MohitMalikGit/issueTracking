@@ -1,5 +1,6 @@
 package com.fil.issueTracking.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,12 +74,31 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	
 	@Override
-	public AllUserApiResponse getAllUsers(String role,Integer pageNumber , Integer pageSize,String sortBy,String sortDir) {
+	public AllUserApiResponse getAllUsers(String role,Integer pageNumber , Integer pageSize,String sortBy,String sortDir,String gender) {
 		
 		Sort sort = (sortDir.equalsIgnoreCase("asc"))?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
 		Pageable p = PageRequest.of(pageNumber, pageSize ,sort);	
-		Page<Employee> pageUser = repo.findAllByRole(Role.employee,p);
-		List<EmployeeDto> empDtoList = pageUser.getContent().stream().map(emp-> modelMapper.map(emp , EmployeeDto.class)).collect(Collectors.toList());
+		Page<Employee> pageUser = repo.findAll(p);
+		List<Employee> content = pageUser.getContent();
+		if(!role.equals("all")) {
+			content = content.stream().filter(e-> e.getRole().name().equals(role)).toList();
+		}
+		if(!gender.equals("all")) {
+			content = content.stream().filter(e->e.getGender().name().equals(gender)).toList();
+		}
+
+		List<EmployeeDto> empDtoList = new ArrayList<>();
+		for( Employee e : content) {
+			EmployeeDto dto = new EmployeeDto();
+			dto.setDateOfJoining(e.getDoj());
+			dto.setEmail(e.getEmail());
+			dto.setEmpId(e.getId());
+			dto.setGender(e.getGender().name());
+			if(e.getManager()!=null) dto.setManagerId(e.getManager().getId());
+			dto.setName(e.getName());
+			dto.setRole(e.getRole());
+			empDtoList.add(dto);
+		}
 		AllUserApiResponse resp = new AllUserApiResponse();
 		System.out.println(pageUser.getContent().size());
 		resp.setContent(empDtoList);
