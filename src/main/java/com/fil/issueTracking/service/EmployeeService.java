@@ -11,7 +11,7 @@ import com.fil.issueTracking.payLoad.LoginRequest;
 
 public interface EmployeeService {
 	CurrentUserResponse findCurrentUser(String id);
-	AllUserApiResponse getAllUsers(Integer pageNumber , Integer pageSize,String sortBy,String sortDir);
+	AllUserApiResponse getAllUsers(String role,Integer pageNumber , Integer pageSize,String sortBy,String sortDir);
 	void changePassword(String id, String password);
 	EmployeeDto userAuthentication(LoginRequest loginRequest);
 	List<AssigneeResponseDto> getAllAssignee();

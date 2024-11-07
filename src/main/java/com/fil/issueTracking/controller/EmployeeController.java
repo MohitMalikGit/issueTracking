@@ -37,45 +37,51 @@ public class EmployeeController {
 	EmployeeService service;
 	@Autowired
 	EmployeeRepo employeeRepo;
-	
+
 	@GetMapping("/api/users/me")
 	public ResponseEntity<CurrentUserResponse> currentUser(@RequestParam String id) {
-		
-		 UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		 System.out.println(principal);
-		
-		return  new ResponseEntity<>( service.findCurrentUser(id) , HttpStatus.OK);
-		
-		
-	}  
-	
-	@GetMapping("/api/users")
-	public AllUserApiResponse getAllUsers(@RequestParam(value="pageNumber" , defaultValue = AppConstants.page_number, required=false)Integer pageNumber, @RequestParam(value="pageSize" ,defaultValue = AppConstants.page_size , required=false)Integer pageSize,
-			@RequestParam(value="sortBy",defaultValue = AppConstants.sort_by, required=false)String sortBy ,@RequestParam(value="sortDir",defaultValue = AppConstants.sort_dir,required = false)String sortDir) {
-		return service.getAllUsers(pageNumber,pageSize,sortBy,sortDir);
-	}
-	
 
- 
+		UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		System.out.println(principal);
+
+		return  new ResponseEntity<>( service.findCurrentUser(id) , HttpStatus.OK);
+
+
+	}  
+
+	@GetMapping("/api/users")
+	public AllUserApiResponse getAllUsers(@RequestParam(value="role")String role,@RequestParam(value="page" , defaultValue = AppConstants.page_number, required=false)Integer pageNumber, @RequestParam(value="limit" ,defaultValue = AppConstants.page_size , required=false)Integer pageSize,
+			@RequestParam(value="sortBy",defaultValue = AppConstants.sort_by, required=false)String sortBy ,@RequestParam(value="order",defaultValue = AppConstants.sort_dir,required = false)String sortDir) {
+		
+		UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Optional<Employee> byId = employeeRepo.findById(principal.getUsername());
+		Employee emp = byId.get();
+		if( !emp.getRole().name().equals("manager")) throw new UserNameAndPasswordNotMatchedException();
+		
+		return service.getAllUsers(role,pageNumber,pageSize,sortBy,sortDir);
+	}
+
+
+
 	//mine
 	@PostMapping("/user/password")
 	public String postMethodName(@RequestBody EmployeePasswordChangeDto empDto) {
 		service.changePassword(empDto.getId(), empDto.getNewPassword());
 		return "password changed successfully";
 	}
-	
+
 	@GetMapping("/api/assignees")
 	public ResponseEntity<List<AssigneeResponseDto>> getAllAssignees() {
-		 UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		 Optional<Employee> byId = employeeRepo.findById(principal.getUsername());
-		 Employee emp = byId.get();
-		 if( !emp.getRole().name().equals("manager")) throw new UserNameAndPasswordNotMatchedException();
-		 List<AssigneeResponseDto> allAssignee = service.getAllAssignee();
-		 
+		UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Optional<Employee> byId = employeeRepo.findById(principal.getUsername());
+		Employee emp = byId.get();
+		if( !emp.getRole().name().equals("manager")) throw new UserNameAndPasswordNotMatchedException();
+		List<AssigneeResponseDto> allAssignee = service.getAllAssignee();
+
 		return ResponseEntity.ok(allAssignee);
 	}
-	
-	
+
+
 
 
 }

@@ -73,13 +73,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	
 	@Override
-	public AllUserApiResponse getAllUsers(Integer pageNumber , Integer pageSize,String sortBy,String sortDir) {
+	public AllUserApiResponse getAllUsers(String role,Integer pageNumber , Integer pageSize,String sortBy,String sortDir) {
 		
 		Sort sort = (sortDir.equalsIgnoreCase("asc"))?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
-		Pageable p = PageRequest.of(pageNumber, pageSize ,sort);		
-		Page<Employee> pageUser = repo.findAll(p);
+		Pageable p = PageRequest.of(pageNumber, pageSize ,sort);	
+		Page<Employee> pageUser = repo.findAllByRole(Role.employee,p);
 		List<EmployeeDto> empDtoList = pageUser.getContent().stream().map(emp-> modelMapper.map(emp , EmployeeDto.class)).collect(Collectors.toList());
 		AllUserApiResponse resp = new AllUserApiResponse();
+		System.out.println(pageUser.getContent().size());
 		resp.setContent(empDtoList);
 		resp.setPageNumber(pageUser.getNumber()); 
 		resp.setPageSize(pageUser.getSize());

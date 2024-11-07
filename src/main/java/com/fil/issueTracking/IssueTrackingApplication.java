@@ -1,6 +1,7 @@
 package com.fil.issueTracking;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.fil.issueTracking.model.Employee;
+import com.fil.issueTracking.payLoad.EmployeeDto;
 import com.fil.issueTracking.security.JwtTokenHelper;
 
 @SpringBootApplication
@@ -25,7 +27,17 @@ public class IssueTrackingApplication implements CommandLineRunner {
 
 	@Bean
 	ModelMapper getModelMapper() {
-		return new ModelMapper();
+		ModelMapper modelMapper = new ModelMapper();
+		  // Define custom mappings
+        modelMapper.addMappings(new PropertyMap<Employee, EmployeeDto>() {
+            @Override
+            protected void configure() {
+                map().setEmpId(source.getId());
+                map().setDateOfJoining(source.getDob());
+                
+            }
+        });
+        return modelMapper;
 	}
 
 	@Override

@@ -17,15 +17,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EmployeeDto {
 	@NotEmpty
-	private String id;
+	private String empId;
 	@NotEmpty
 	private String name;
 	@Email
 	private String email;
 	@NotEmpty
-	private Date dob;
-	@NotEmpty
-	private Date doj;
+	private Date dateOfJoining;
+	private String gender;
 	private String ManagerId;
 	private Role role;
 	
