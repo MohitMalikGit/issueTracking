@@ -9,6 +9,7 @@ import com.fil.issueTracking.payLoad.CurrentUserResponse;
 import com.fil.issueTracking.payLoad.EmployeeDto;
 import com.fil.issueTracking.payLoad.LoginRequest;
 import com.fil.issueTracking.payLoad.UpdateIssueApprovalStatusRequest;
+import com.fil.issueTracking.payLoad.UpdateUserDetailResponse;
 
 public interface EmployeeService {
 	CurrentUserResponse findCurrentUser(String id);
@@ -16,6 +17,7 @@ public interface EmployeeService {
 	void changePassword(String id, String password);
 	EmployeeDto userAuthentication(LoginRequest loginRequest);
 	List<AssigneeResponseDto> getAllAssignee();
+	UpdateUserDetailResponse updateUserDetails(String empId,String role, String gender, String managerId);
 	
 
 }

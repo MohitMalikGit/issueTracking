@@ -26,11 +26,16 @@ import com.fil.issueTracking.payLoad.CurrentUserResponse;
 import com.fil.issueTracking.payLoad.EmployeeDto;
 import com.fil.issueTracking.payLoad.EmployeePasswordChangeDto;
 import com.fil.issueTracking.payLoad.LoginRequest;
+import com.fil.issueTracking.payLoad.UpdateUserDetailRequest;
+import com.fil.issueTracking.payLoad.UpdateUserDetailResponse;
 import com.fil.issueTracking.repo.EmployeeRepo;
 import com.fil.issueTracking.service.EmployeeService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 @RestController
@@ -83,7 +88,12 @@ public class EmployeeController {
 
 		return ResponseEntity.ok(allAssignee);
 	}
-
+	
+	
+	@PutMapping("/api/users/{userId}")
+	public ResponseEntity<UpdateUserDetailResponse> updateUserDetail(@RequestBody UpdateUserDetailRequest request , @PathParam("userId") String userId) {		
+		return ResponseEntity.ok(service.updateUserDetails(userId,request.getRole(),request.getGender(),request.getManagerId()));
+	}
 
 
 

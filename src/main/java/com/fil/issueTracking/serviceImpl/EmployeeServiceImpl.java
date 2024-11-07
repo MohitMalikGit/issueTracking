@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fil.issueTracking.enums.Gender;
 import com.fil.issueTracking.enums.Role;
 import com.fil.issueTracking.exception.ResourceNotFoundException;
 import com.fil.issueTracking.exception.UserNameAndPasswordNotMatchedException;
@@ -27,6 +28,7 @@ import com.fil.issueTracking.payLoad.AssigneeResponseDto;
 import com.fil.issueTracking.payLoad.CurrentUserResponse;
 import com.fil.issueTracking.payLoad.EmployeeDto;
 import com.fil.issueTracking.payLoad.LoginRequest;
+import com.fil.issueTracking.payLoad.UpdateUserDetailResponse;
 import com.fil.issueTracking.repo.EmployeeRepo;
 import com.fil.issueTracking.service.EmployeeService;
 @Service
@@ -129,6 +131,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 		List<Employee> allByRole = repo.findAllByRole(Role.support);
 		List<AssigneeResponseDto> collect = allByRole.stream().map(emp-> new AssigneeResponseDto(emp.getId() , emp.getName())).collect(Collectors.toList());
 		return collect;
+	}
+
+
+
+
+
+
+	@Override
+	@Transactional
+	public UpdateUserDetailResponse updateUserDetails(String empId,String role, String gender, String managerId) {
+		Optional<Employee> byId = repo.findById(empId);
+		Employee emp = byId.get();
+		emp.setRole(Role.valueOf(role));
+		emp.setManager(repo.findById(managerId).get());
+		emp.setGender(Gender.valueOf(gender));
+		return new UpdateUserDetailResponse(emp.getId(),emp.getName(),emp.getEmail(),emp.getRole().name(),emp.getGender().name(),emp.getDoj().toString());
 	}
 
 
