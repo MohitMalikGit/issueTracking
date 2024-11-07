@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,13 +41,13 @@ public class EmployeeController {
 	@Autowired
 	EmployeeRepo employeeRepo;
 
-	@GetMapping("/api/users/me")
-	public ResponseEntity<CurrentUserResponse> currentUser(@RequestParam String id) {
+	@GetMapping("/api/users/{empId}")
+	public ResponseEntity<CurrentUserResponse> currentUser(@PathParam(value="empId") String empId) {
 
 		UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		System.out.println(principal);
 
-		return  new ResponseEntity<>( service.findCurrentUser(id) , HttpStatus.OK);
+		return  new ResponseEntity<>( service.findCurrentUser(empId) , HttpStatus.OK);
 
 
 	}  

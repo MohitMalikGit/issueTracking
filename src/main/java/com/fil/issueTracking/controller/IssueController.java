@@ -67,10 +67,10 @@ public class IssueController {
 	
 	
 	@GetMapping("/api/approvalIssues")
-	public ResponseEntity<PendingIssueApprovalResponse> getMethodName(@RequestParam String category,@RequestParam String employee , @RequestParam String sortBy,
-			@RequestParam String order ,@RequestParam String page,@RequestParam String limit) {
+	public ResponseEntity<List<PendingIssueApprovalResponse>> getMethodName(@RequestParam String category,@RequestParam String employee , @RequestParam String sortBy,
+			@RequestParam String order ,@RequestParam Integer page,@RequestParam Integer limit) {
 		
-		return null;
+		return ResponseEntity.ok(service.getPendingIssueApproval(category,employee,sortBy,order,page,limit));
 	}
 	
 	

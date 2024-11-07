@@ -33,6 +33,7 @@ import com.fil.issueTracking.model.Employee;
 import com.fil.issueTracking.model.Issue;
 import com.fil.issueTracking.model.IssueType;
 import com.fil.issueTracking.payLoad.GetSingleIssueApiResponse;
+import com.fil.issueTracking.payLoad.PendingIssueApprovalResponse;
 import com.fil.issueTracking.payLoad.UpdateIssueApprovalStatusRequest;
 import com.fil.issueTracking.payLoad.createIssueApiRequest;
 import com.fil.issueTracking.payLoad.createIssueApiResponse;
@@ -136,6 +137,34 @@ public class IssueServiceImpl implements IssueService {
 	
 	
 	
+	
+
+
+
+	@Override
+	@Transactional
+	public void updateIssueApprovalStatus(UpdateIssueApprovalStatusRequest request,Integer issueId) {
+		Optional<Issue> byId = issueRepo.findById(issueId);
+		Issue issue = byId.get();
+		issue.setStatus(IssueStatus.valueOf(request.getStatus()));
+		issue.setApprovedBy(issue.getRaisedBy().getManager());
+		if(request.getStatus().equals("in_progress")) {
+			List<Employee> allByRole = employeeRepo.findAllByRole(Role.support);
+			for( Employee e : allByRole) {
+				for( IssueType it : e.getExpertise()) {
+					if( it.getType().equals(issue.getIssueType().getType())) {
+						issue.setStatus(IssueStatus.in_progress);
+						issue.setAssignedTo(e);
+						e.getAssignedIssue().add(issue);
+					}
+				}
+			}
+		}
+		
+		issue.setFeedback(request.getComment());
+		
+	}
+
 	@Override
 	public List<GetSingleIssueApiResponse> getAllTheIssue(Integer pageNumber, Integer pageSize, String issueType,
 			String issueStatus, String assigneeId, String sortBy , String sortDir) {
@@ -189,29 +218,37 @@ public class IssueServiceImpl implements IssueService {
 
 
 
-
 	@Override
-	@Transactional
-	public void updateIssueApprovalStatus(UpdateIssueApprovalStatusRequest request,Integer issueId) {
-		Optional<Issue> byId = issueRepo.findById(issueId);
-		Issue issue = byId.get();
-		issue.setStatus(IssueStatus.valueOf(request.getStatus()));
-		issue.setApprovedBy(issue.getRaisedBy().getManager());
-		if(request.getStatus().equals("in_progress")) {
-			List<Employee> allByRole = employeeRepo.findAllByRole(Role.support);
-			for( Employee e : allByRole) {
-				for( IssueType it : e.getExpertise()) {
-					if( it.getType().equals(issue.getIssueType().getType())) {
-						issue.setStatus(IssueStatus.in_progress);
-						issue.setAssignedTo(e);
-						e.getAssignedIssue().add(issue);
-					}
-				}
-			}
+	public List<PendingIssueApprovalResponse> getPendingIssueApproval(String issueType, String empId, String sortBy,
+			String sortDir, Integer pageNumber, Integer pageSize) {
+		UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Optional<Employee> byId = employeeRepo.findById(principal.getUsername());
+		Employee emp = byId.get();
+		Sort sort = (sortDir.equalsIgnoreCase("asc"))?Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
+		Pageable p = PageRequest.of(pageNumber, pageSize ,sort);
+		Page<Issue> allByStatus = issueRepo.findAll(p);
+		List<Issue> content = allByStatus.getContent();
+		content = content.stream().filter(i-> i.getStatus() == (IssueStatus.not_accepted)).toList();
+		if(!issueType.equals("all")) {
+			content = content.stream().filter(i-> i.getIssueType().getType().equals(issueType)).toList();
+		}
+		if(!empId.equals("all")) {
+			content = content.stream().filter(i-> i.getRaisedBy().getId().equals(empId)).toList();
+		}
+		content = content.stream().filter(i->i.getRaisedBy().getManager()==emp).toList();
+		List<PendingIssueApprovalResponse> response = new ArrayList<>();
+		for( Issue i : content) {
+			PendingIssueApprovalResponse resp = new PendingIssueApprovalResponse();
+			resp.setIssueId(String.valueOf(i.getId()));
+			resp.setCreatedAt(i.getCreatedAt().toLocalDateTime().toLocalDate().toString());
+			resp.setDescription(i.getDescription());
+			resp.setIssueType(i.getIssueType().getType());
+			resp.setRaisedBy(i.getRaisedBy().getName());
+			response.add(resp);
+			
 		}
 		
-		issue.setFeedback(request.getComment());
-		
+		return response;
 	}
 
 
