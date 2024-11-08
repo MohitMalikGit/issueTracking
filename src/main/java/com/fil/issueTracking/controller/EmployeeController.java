@@ -25,6 +25,7 @@ import com.fil.issueTracking.payLoad.AssigneeResponseDto;
 import com.fil.issueTracking.payLoad.CurrentUserResponse;
 import com.fil.issueTracking.payLoad.EmployeeDto;
 import com.fil.issueTracking.payLoad.EmployeePasswordChangeDto;
+import com.fil.issueTracking.payLoad.GetEmployeesResponse;
 import com.fil.issueTracking.payLoad.LoginRequest;
 import com.fil.issueTracking.payLoad.UpdateUserDetailRequest;
 import com.fil.issueTracking.payLoad.UpdateUserDetailResponse;
@@ -95,6 +96,12 @@ public class EmployeeController {
 		return ResponseEntity.ok(service.updateUserDetails(userId,request.getRole(),request.getGender(),request.getManagerId()));
 	}
 
+	
+	@GetMapping("/api/employees")
+	public ResponseEntity<List<GetEmployeesResponse>> getEmployees() {
+		
+		return ResponseEntity.ok(service.getAllEmployees());
+	}
 
 
 }

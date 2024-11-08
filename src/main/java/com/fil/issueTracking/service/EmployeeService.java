@@ -7,6 +7,7 @@ import com.fil.issueTracking.payLoad.AllUserApiResponse;
 import com.fil.issueTracking.payLoad.AssigneeResponseDto;
 import com.fil.issueTracking.payLoad.CurrentUserResponse;
 import com.fil.issueTracking.payLoad.EmployeeDto;
+import com.fil.issueTracking.payLoad.GetEmployeesResponse;
 import com.fil.issueTracking.payLoad.LoginRequest;
 import com.fil.issueTracking.payLoad.UpdateIssueApprovalStatusRequest;
 import com.fil.issueTracking.payLoad.UpdateUserDetailResponse;
@@ -18,6 +19,7 @@ public interface EmployeeService {
 	EmployeeDto userAuthentication(LoginRequest loginRequest);
 	List<AssigneeResponseDto> getAllAssignee();
 	UpdateUserDetailResponse updateUserDetails(String empId,String role, String gender, String managerId);
+	List<GetEmployeesResponse> getAllEmployees();
 	
 
 }

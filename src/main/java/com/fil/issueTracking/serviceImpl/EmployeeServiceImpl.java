@@ -20,6 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.fil.issueTracking.model.Employee;
@@ -27,6 +29,7 @@ import com.fil.issueTracking.payLoad.AllUserApiResponse;
 import com.fil.issueTracking.payLoad.AssigneeResponseDto;
 import com.fil.issueTracking.payLoad.CurrentUserResponse;
 import com.fil.issueTracking.payLoad.EmployeeDto;
+import com.fil.issueTracking.payLoad.GetEmployeesResponse;
 import com.fil.issueTracking.payLoad.LoginRequest;
 import com.fil.issueTracking.payLoad.UpdateUserDetailResponse;
 import com.fil.issueTracking.repo.EmployeeRepo;
@@ -147,6 +150,30 @@ public class EmployeeServiceImpl implements EmployeeService {
 		emp.setManager(repo.findById(managerId).get());
 		emp.setGender(Gender.valueOf(gender));
 		return new UpdateUserDetailResponse(emp.getId(),emp.getName(),emp.getEmail(),emp.getRole().name(),emp.getGender().name(),emp.getDoj().toString());
+	}
+
+
+
+
+
+
+	@Override
+	public List<GetEmployeesResponse> getAllEmployees() {
+		UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Optional<Employee> byId = repo.findById(principal.getUsername());
+		Employee emp = byId.get();
+		List<Employee> content = repo.findAll().stream().filter(e-> e.getRole() == Role.employee).toList();
+		if(emp.getManager() == null && emp.getRole() == Role.employee) {
+			content = content.stream().filter(e->  e.getManager() == emp ).toList();
+		}
+		List<GetEmployeesResponse> response = new ArrayList<>();
+		for( Employee e : content) {
+			GetEmployeesResponse res = new GetEmployeesResponse();
+			res.setId(e.getId());
+			res.setName(e.getName());
+			response.add(res);
+		}
+		return response;
 	}
 
 
