@@ -35,6 +35,7 @@ import com.fil.issueTracking.model.IssueType;
 import com.fil.issueTracking.payLoad.GetSingleIssueApiResponse;
 import com.fil.issueTracking.payLoad.PendingIssueApprovalResponse;
 import com.fil.issueTracking.payLoad.UpdateIssueApprovalStatusRequest;
+import com.fil.issueTracking.payLoad.UpdateIssueResponse;
 import com.fil.issueTracking.payLoad.createIssueApiRequest;
 import com.fil.issueTracking.payLoad.createIssueApiResponse;
 import com.fil.issueTracking.repo.EmployeeRepo;
@@ -249,6 +250,19 @@ public class IssueServiceImpl implements IssueService {
 		}
 		
 		return response;
+	}
+
+
+
+
+	@Override
+	@Transactional
+	public void updateIssue(Integer issueId, String status, String assignedto ){
+			Optional<Issue> byId = issueRepo.findById(issueId);
+			Issue issue = byId.get();
+			issue.setAssignedTo(employeeRepo.findById(assignedto).get());
+			issue.setStatus(IssueStatus.valueOf(status));
+			
 	}
 
 

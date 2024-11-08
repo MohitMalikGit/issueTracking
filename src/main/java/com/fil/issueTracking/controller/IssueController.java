@@ -6,6 +6,10 @@ import com.fil.issueTracking.model.Employee;
 import com.fil.issueTracking.payLoad.GetSingleIssueApiResponse;
 import com.fil.issueTracking.payLoad.PendingIssueApprovalResponse;
 import com.fil.issueTracking.payLoad.UpdateIssueApprovalStatusRequest;
+import com.fil.issueTracking.payLoad.UpdateIssueRequest;
+import com.fil.issueTracking.payLoad.UpdateIssueResponse;
+import com.fil.issueTracking.payLoad.UpdateUserDetailRequest;
+import com.fil.issueTracking.payLoad.UpdateUserDetailResponse;
 import com.fil.issueTracking.payLoad.createIssueApiRequest;
 import com.fil.issueTracking.payLoad.createIssueApiResponse;
 import com.fil.issueTracking.service.IssueService;
@@ -25,6 +29,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 
@@ -74,6 +81,12 @@ public class IssueController {
 	}
 	
 	
+	@PutMapping("/api/issues/{issueId}")
+	public HttpStatus updateIssuess(@PathParam(value = "issueId") String issueId, @RequestBody UpdateIssueRequest req) {
+		System.out.println(issueId + " " + "hi");
+		service.updateIssue(Integer.parseInt(issueId), req.getStatus(),req.getAssigneeId());
+		return HttpStatus.OK;
+	}
 	
 	
 	
